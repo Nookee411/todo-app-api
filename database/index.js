@@ -3,10 +3,10 @@ const { Pool } = require('pg');
 const { Model } = require('objection');
 const KNEX_CONFIG = require('./config/knexConfig');
 const POOL_CONFIG = require('./config/poolConfig');
-const databaseActions = require('./DBActions');
+const databaseOperations = require('./DatabaseOpreations');
 
 const knex = require('knex')(KNEX_CONFIG);
 
 const pool = new Pool(POOL_CONFIG);
 
-module.exports = databaseActions(pool);
+module.exports = databaseOperations(pool);

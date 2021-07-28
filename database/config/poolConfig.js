@@ -4,4 +4,6 @@ const POOL_CONFIG = {
   database: 'todoappdb',
   password: 'password',
   port: 5432,
-}
+};
+
+module.exports = POOL_CONFIG;

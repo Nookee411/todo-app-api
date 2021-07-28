@@ -1,19 +1,11 @@
 const express = require('express');
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'todoappdb',
-  password: 'password',
-  port: 5432,
-});
+const { todoProcessors } = require('./requestProcessors');
 
 const todoRouter = express.Router();
-todoRouter.get('/', (req, res) => {});
-todoRouter.get('/:id', (req, res) => {});
-todoRouter.post('/', (req, res) => {});
-todoRouter.put('/', (req, res) => {});
-todoRouter.delete('/', (req, res) => {});
+todoRouter.get('/', todoProcessors.getTodos);
+todoRouter.get('/:id', todoProcessors.getTodoByID);
+todoRouter.post('/', todoProcessors.createTodo);
+todoRouter.put('/', todoProcessors.updateTodo);
+todoRouter.delete('/', todoProcessors.deleteTodo);
 
 module.exports = todoRouter;

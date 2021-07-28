@@ -1,35 +1,26 @@
-const databaseOperations = (pool) => ({
-  getTodos: async () => {
-    const res = await pool.query('SELECT * FROM todos');
-    return res.rows;
-  },
+const databaseOperations = (db) => ({
+  getTodos: () => db.select().from('todos'),
 
   getTodoByID: async (id) => {
-    const res = await pool.query('SELECT * FROM todos WHERE id = $1', [id]);
-    return res.rows[0];
+    const res = await db.select().from('todos').where('id', id);
+    return res[0];
   },
 
-  createTodo: ({ id, content, finished }) =>
-    pool
-      .query('INSERT INTO todos (id, content, finished) VALUES ($1, $2, $3)', [
-        id,
-        content,
-        finished,
-      ])
-      .then(() => ({ message: 'Todo was added to database ', id })),
+  createTodo: async (todo) => {
+    await db('todos').insert(todo);
+    return { message: 'Todo was created in database todos', id: todo.id };
+  },
 
-  updateTodo: ({ id, content, finished }) =>
-    pool
-      .query('UPDATE todos SET content = $1, finished=$2 WHERE id = $3', [
-        content,
-        finished,
-        id,
-      ])
-      .then(() => ({ message: 'Todo was updated in database', id })),
+  updateTodo: async ({ id, content, finished }) => {
+    await db('todos').update({ content, finished }).where('id', id);
 
-  deleteTodo: (id) =>
-    pool.query('DELETE FROM todos WHERE id=$1', [id]).then(() => ({
-      message: 'Todo was deleted from database',
-    })),
+    return { message: 'Todo was updated in database todos' };
+  },
+
+  deleteTodo: async (id) => {
+    await db('todos').where('id', id).del();
+    return { message: 'Todo was deleted from database' };
+  },
 });
+
 module.exports = databaseOperations;

@@ -1,12 +1,12 @@
 /* eslint-disable import/order */
-const { Pool } = require('pg');
 const { Model } = require('objection');
-const KNEX_CONFIG = require('./config/knexConfig');
-const POOL_CONFIG = require('./config/poolConfig');
+const knexfile = require('./knexfile');
 const databaseOperations = require('./DatabaseOpreations');
 
-const knex = require('knex')(KNEX_CONFIG);
+const db = require('knex')(knexfile.development);
 
-const pool = new Pool(POOL_CONFIG);
+Model.knex(db);
 
-module.exports = databaseOperations(pool);
+// const pool = new Pool(POOL_CONFIG);
+
+module.exports = databaseOperations(db);

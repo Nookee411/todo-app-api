@@ -9,7 +9,6 @@ const databaseOperations = (db) => ({
     await TodoTask.query().insert({
       ...todo,
     });
-    // await db('todos').insert(todo);
     return { message: 'Todo was created in database todos', id: todo.id };
   },
 

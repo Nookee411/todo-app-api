@@ -16,32 +16,39 @@ const getTodoByID = async ({ params: { id } }, res) => {
   res.status(200).json(result);
 };
 
-const createTodo = async ({ query: { content } }, res) => {
-  if (!content.length) {
-    res.status(200).json(badRequest);
+const createTodo = async ({ body: { content } }, res) => {
+  try {
+    if (!content.length) {
+      res.status(200).json(badRequest);
+    }
+    const result = await db.createTodo({
+      id: uuidv4(),
+      content,
+      finished: false,
+    });
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(500).json('Internal server error');
   }
-  const result = await db.createTodo({
-    id: uuidv4(),
-    content,
-    finished: false,
-  });
-  res.status(201).json(result);
 };
-const updateTodo = async ({ query: { id, ...data } }, res) => {
+const updateTodo = async ({ body: { id, todo } }, res) => {
   const oldTodo = await db.getTodoByID(id);
   if (!oldTodo) {
     res.status(404).json('No such id found');
     return;
   }
-  if (isEmpty(data)) {
+  if (isEmpty(todo)) {
     res.status(400).json(badRequest);
     return;
   }
-  const result = await db.updateTodo({ ...oldTodo, ...data });
+  const result = await db.updateTodo({
+    ...oldTodo,
+    ...todo,
+  });
   res.status(200).json(result);
 };
 
-const deleteTodo = async ({ query: { id } }, res) => {
+const deleteTodo = async ({ body: { id } }, res) => {
   const result = await db.deleteTodo(id);
   res.status(200).json(result);
 };

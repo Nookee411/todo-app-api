@@ -20,7 +20,11 @@ const createTodo = async ({ query: { content } }, res) => {
   if (!content.length) {
     res.status(200).json(badRequest);
   }
-  const result = await db.createTodo({ id: uuidv4(), content, finished: 0 });
+  const result = await db.createTodo({
+    id: uuidv4(),
+    content,
+    finished: false,
+  });
   res.status(201).json(result);
 };
 const updateTodo = async ({ query: { id, ...data } }, res) => {

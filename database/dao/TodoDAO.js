@@ -1,7 +1,8 @@
-const { TodoTask } = require('./models/TodoTask');
+const { TodoTask } = require('../models/TodoTask');
 
-const databaseOperations = (db) => ({
-  getTodos: () => TodoTask.query().orderBy('added_date', 'desc'),
+const TodoDAO = {
+  getTodos: (id) =>
+    TodoTask.query().where('userID', id).orderBy('added_date', 'desc'),
 
   getTodoByID: async (id) => TodoTask.query().findById(id),
 
@@ -24,6 +25,6 @@ const databaseOperations = (db) => ({
     await TodoTask.query().deleteById(id);
     return { message: 'Todo was deleted from database' };
   },
-});
+};
 
-module.exports = databaseOperations;
+module.exports = TodoDAO;

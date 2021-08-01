@@ -1,29 +1,29 @@
 const { v4: uuidv4 } = require('uuid');
 const isEmpty = require('lodash/isEmpty');
-const db = require('../../database');
+const { TodoDAO } = require('../../database');
 
 const badRequest = {
   message: 'Bad request',
 };
 
-const getTodos = async (req, res) => {
-  const todos = await db.getTodos();
+const getTodos = async ({ query }, res) => {
+  const todos = await TodoDAO.getTodos(query.userID);
   res.status(200).json(todos);
 };
 
 const getTodoByID = async ({ params: { id } }, res) => {
-  const result = await db.getTodoByID(id);
+  const result = await TodoDAO.getTodoByID(id);
   res.status(200).json(result);
 };
 
-const createTodo = async ({ body: { content } }, res) => {
+const createTodo = async ({ body }, res) => {
   try {
-    if (!content.length) {
-      res.status(200).json(badRequest);
+    if (!body.content.length) {
+      res.status(400).json(badRequest);
     }
-    const result = await db.createTodo({
+    const result = await TodoDAO.createTodo({
       id: uuidv4(),
-      content,
+      ...body,
       finished: false,
     });
     res.status(201).json(result);
@@ -31,8 +31,9 @@ const createTodo = async ({ body: { content } }, res) => {
     res.status(500).json('Internal server error');
   }
 };
-const updateTodo = async ({ body: { id, todo } }, res) => {
-  const oldTodo = await db.getTodoByID(id);
+const updateTodo = async ({ body }, res) => {
+  const { id, todo } = body;
+  const oldTodo = await TodoDAO.getTodoByID(id);
   if (!oldTodo) {
     res.status(404).json('No such id found');
     return;
@@ -41,23 +42,24 @@ const updateTodo = async ({ body: { id, todo } }, res) => {
     res.status(400).json(badRequest);
     return;
   }
-  const result = await db.updateTodo({
+  const result = await TodoDAO.updateTodo({
     ...oldTodo,
     ...todo,
   });
   res.status(200).json(result);
 };
 
-const deleteTodo = async ({ body: { id } }, res) => {
-  const result = await db.deleteTodo(id);
+const deleteTodo = async ({ body }, res) => {
+  const { id } = body;
+  const result = await TodoDAO.deleteTodo(id);
   res.status(200).json(result);
 };
 
-const todoProcessors = {
+const todoController = {
   getTodos,
   getTodoByID,
   createTodo,
   updateTodo,
   deleteTodo,
 };
-module.exports = todoProcessors;
+module.exports = todoController;

@@ -7,18 +7,24 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "migrate-latest": "npx knex migrate:latest --knexfile database/knexfile.js",
-    "migrate-down": "npx knex migrate:down --knexfile database/knexfile.js"
+    "migrate-down": "npx knex migrate:down --knexfile database/knexfile.js",
+    "migrate-up": "npx knex migrate:up --knexfile database/knexfile.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "knex": "^0.95.8",
     "lodash": "^4.17.21",
     "objection": "^2.2.15",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.6.0",
     "uuid": "^8.3.2"
   },

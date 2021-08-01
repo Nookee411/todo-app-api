@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
 const defineRoutes = require('./routes/index.js');
+const initPassport = require('./passport.config.js');
 
 const PORT = 3000;
 const app = express();
@@ -13,6 +15,8 @@ app.use(
     extended: true,
   }),
 );
+app.use(passport.initialize());
+initPassport(passport);
 
 app.use(
   cors({

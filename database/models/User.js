@@ -1,8 +1,8 @@
 const { Model } = require('objection');
 
-class TodoTask extends Model {
+class User extends Model {
   static get tableName() {
-    return 'todos';
+    return 'users';
   }
 
   static get idColumn() {
@@ -17,14 +17,13 @@ class TodoTask extends Model {
         id: {
           type: 'string',
         },
-        content: { type: 'string', maxLength: 1000 },
-        finished: { type: 'boolean' },
-        userID: { type: 'string' },
+        name: { type: 'string' },
+        password: { type: 'string' },
       },
     };
   }
 }
 
 module.exports = {
-  TodoTask,
+  User,
 };

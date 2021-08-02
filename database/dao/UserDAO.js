@@ -4,10 +4,8 @@ const UserDAO = {
   addUser: async (user) => {
     await User.query().insert(user);
   },
-  getUserById: (id) => {
-    User.query().findById(id);
-  },
-  getUserByName: (name) => User.query().findOne('name', name),
+  getUserByName: (name) => User.query().findOne('name', '=', name),
+  getUserByID: (id) => User.query().findById(id),
 };
 
 module.exports = UserDAO;

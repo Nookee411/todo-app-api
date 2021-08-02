@@ -2,14 +2,12 @@ const { TodoTask } = require('../models/TodoTask');
 
 const TodoDAO = {
   getTodos: (id) =>
-    TodoTask.query().where('userID', id).orderBy('added_date', 'desc'),
+    TodoTask.query().where('user_id', id).orderBy('added_date', 'desc'),
 
   getTodoByID: async (id) => TodoTask.query().findById(id),
 
   createTodo: async (todo) => {
-    await TodoTask.query().insert({
-      ...todo,
-    });
+    await TodoTask.query().insert(todo);
     return { message: 'Todo was created in database todos', id: todo.id };
   },
 

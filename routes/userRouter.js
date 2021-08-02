@@ -8,7 +8,7 @@ const userRouter = express.Router();
 userRouter.post('/signup', userController.registerUser);
 userRouter.post(
   '/signin',
-  passport.authenticate('local'),
+  passport.authenticate('local', { session: false }),
   userController.signinUser,
 );
 

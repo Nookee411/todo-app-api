@@ -6,11 +6,10 @@ const db = require('../../database');
 const registerUser = async ({ body: { login, password } }, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   await UserDAO.addUser({
-    id: uuidv4(),
     name: login,
     password: hashedPassword,
   });
-  res.status(201).send();
+  res.sendStatus(201);
 };
 
 const signinUser = async ({ body: { login } }, res) => {

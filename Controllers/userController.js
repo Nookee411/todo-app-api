@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { UserDAO } = require('../../database');
-const db = require('../../database');
+const { UserDAO } = require('../database');
+const db = require('../database');
 
 const registerUser = async ({ body: { login, password } }, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);

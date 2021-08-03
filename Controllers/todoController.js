@@ -1,5 +1,7 @@
+/* eslint-disable consistent-return */
+const { validationResult } = require('express-validator');
 const isEmpty = require('lodash/isEmpty');
-const { TodoDAO, UserDAO } = require('../../database');
+const { TodoDAO, UserDAO } = require('../database');
 
 const getTodos = async (req, res) => {
   const { id } = req.user;
@@ -16,7 +18,13 @@ const getTodoByID = async ({ body: { id }, user: { id: userID } }, res) => {
   res.status(200).json(result);
 };
 
-const createTodo = async ({ body: { content }, user: { id } }, res) => {
+const createTodo = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { content } = req.body;
+  const { id } = req.user;
   try {
     if (!content.length) {
       res.sendStatus(400);

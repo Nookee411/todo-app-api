@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UserDAO } = require('../database');
 const db = require('../database');
+const sendResponse = require('../sendResponse');
 
 const registerUser = async ({ body: { login, password } }, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -9,7 +10,7 @@ const registerUser = async ({ body: { login, password } }, res) => {
     name: login,
     password: hashedPassword,
   });
-  res.sendStatus(201);
+  sendResponse(res, 201);
 };
 
 const signinUser = async ({ body: { login } }, res) => {
@@ -18,9 +19,9 @@ const signinUser = async ({ body: { login } }, res) => {
     JSON.stringify(user),
     process.env.ACCESS_TOKEN_SECRET,
   );
-  res
-    .status(200)
-    .json({ user: { name: user.name, id: user.id, token: accessToken } });
+  sendResponse(res, 200, {
+    user: { name: user.name, id: user.id, token: accessToken },
+  });
 };
 
 const userController = {

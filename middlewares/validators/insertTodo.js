@@ -1,7 +1,7 @@
 const insertTodoValidator = {
   content: {
     in: ['body'],
-    isInt: {
+    isString: {
       errorMessage: 'Content must not be empty',
       options: {
         min: 1,

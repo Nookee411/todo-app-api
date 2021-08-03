@@ -1,75 +1,68 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable consistent-return */
 const { validationResult } = require('express-validator');
 const isEmpty = require('lodash/isEmpty');
 const { TodoDAO, UserDAO } = require('../database');
+const sendResponse = require('../sendResponse');
 
 const getTodos = async (req, res) => {
   const { id } = req.user;
   if (!id) {
-    res.sendStatus(400);
+    sendResponse(res, 400, 'Id not found');
   }
   const todos = await TodoDAO.getTodos(id);
-  res.status(200).json(todos);
+  sendResponse(res, 200, todos);
 };
 
 const getTodoByID = async ({ body: { id }, user: { id: userID } }, res) => {
   const result = await TodoDAO.getTodoByID(id);
-  if (result.user_id !== userID) res.sendStatus(403);
-  res.status(200).json(result);
+  if (result.user_id !== userID) {
+    sendResponse(res, 403, "Item doesn't match with user");
+  }
+  sendResponse(res, 200, result);
 };
 
-const createTodo = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  const { content } = req.body;
-  const { id } = req.user;
-  try {
-    if (!content.length) {
-      res.sendStatus(400);
-    }
-    const result = await TodoDAO.createTodo({
-      content,
-      user_id: id,
-      finished: false,
-    });
-    res.status(201).json(result);
-  } catch (err) {
-    res.sendStatus(500);
-  }
+const createTodo = async ({ user: { id }, body: { content } }, res) => {
+  const result = await TodoDAO.createTodo({
+    content,
+    user_id: id,
+    finished: false,
+  });
+  sendResponse(res, 201, result);
 };
 const updateTodo = async (
   { body: { id, todo }, user: { id: userID } },
   res,
 ) => {
   if (isEmpty(todo)) {
-    res.sendStatus(400);
+    sendResponse(res, 400);
     return;
   }
   const oldTodo = await TodoDAO.getTodoByID(id);
 
   if (!oldTodo) {
-    res.sendStatus(404);
+    sendResponse(res, 404, 'No such todo found');
     return;
   }
   if (oldTodo.user_id !== userID) {
-    res.sendStatus(403);
+    sendResponse(res, 403, "Todo doesn't match with user");
     return;
   }
   await TodoDAO.updateTodo({
     ...oldTodo,
     ...todo,
   });
-  res.sendStatus(200);
+  sendResponse(res, 200);
 };
 
 const deleteTodo = async ({ body, user: { id: userID } }, res) => {
   const { id } = body;
   const todo = await TodoDAO.getTodoByID(id);
-  if (todo.user_id !== userID) res.sendStatus(403);
+  if (todo.user_id !== userID) {
+    sendResponse(res, 403, "Todo doesn't belong  to user");
+  }
   await TodoDAO.deleteTodo(id);
-  res.sendStatus(200);
+  sendResponse(res, 200);
 };
 
 const todoController = {

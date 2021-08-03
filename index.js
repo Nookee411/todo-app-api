@@ -1,21 +1,17 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+require('dotenv').config();
 const cors = require('cors');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
 const defineRoutes = require('./routes/index.js');
 const initPassport = require('./passport.config.js');
 
 const PORT = 3000;
 const app = express();
 
-app.use(bodyParser.json());
-
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  }),
-);
+app.use(express.json());
 app.use(passport.initialize());
+app.use(cookieParser());
 initPassport(passport);
 
 app.use(

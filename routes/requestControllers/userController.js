@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
+const jwt = require('jsonwebtoken');
 const { UserDAO } = require('../../database');
 const db = require('../../database');
 
@@ -13,7 +13,14 @@ const registerUser = async ({ body: { login, password } }, res) => {
 };
 
 const signinUser = async ({ body: { login } }, res) => {
-  res.status(200).json(await db.UserDAO.getUserByName(login));
+  const user = await db.UserDAO.getUserByName(login);
+  const accessToken = jwt.sign(
+    JSON.stringify(user),
+    process.env.ACCESS_TOKEN_SECRET,
+  );
+  res
+    .status(200)
+    .json({ user: { name: user.name, id: user.id, token: accessToken } });
 };
 
 const userController = {

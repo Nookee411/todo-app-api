@@ -1,0 +1,12 @@
+POST http://localhost:3000/user/signin
+Content-Type: application/json
+
+{
+    "login": "daniil",
+    "password": "1234"
+}
+
+###
+
+GET  http://localhost:3000/todos/?id=8e4510c8-c9cc-48ef-9f66-6611277d0a5d
+

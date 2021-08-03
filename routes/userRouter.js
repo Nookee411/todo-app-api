@@ -1,5 +1,4 @@
 const express = require('express');
-const { session } = require('passport');
 const passport = require('passport');
 const { userController } = require('./requestControllers');
 

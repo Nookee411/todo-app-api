@@ -2,13 +2,18 @@
 /* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const { UserDAO } = require('../../database');
-const sendResponse = require('../../sendResponse');
 
 const authenticateToken = (req, res, next) => {
   const token = req.headers.bearer;
-  if (token == null) return sendResponse(res, 500, 'Access token not found');
+  if (token == null) {
+    res.status(500).data = 'Access token not found';
+    next();
+  }
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
-    if (err) return sendResponse(res, 403, 'Token invalid');
+    if (err) {
+      res.status(403).data = 'Token invalid';
+      next();
+    }
     req.user = await UserDAO.getUserByID(user.id);
     next();
   });

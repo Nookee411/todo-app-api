@@ -8,7 +8,6 @@ const db = require('knex')(knexfile.development);
 
 Model.knex(db);
 
-// const pool = new Pool(POOL_CONFIG);
 const databaseOperations = {
   TodoDAO,
   UserDAO,

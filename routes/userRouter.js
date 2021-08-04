@@ -19,5 +19,6 @@ userRouter.post(
   passport.authenticate('local', { session: false }),
   userController.signinUser,
 );
+userRouter.get('/check', userController.checkUsername);
 
 module.exports = userRouter;

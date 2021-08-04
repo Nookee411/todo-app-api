@@ -30,9 +30,17 @@ const restoreUser = async (req, res, next) => {
   next();
 };
 
+const checkUsername = async (req, res, next) => {
+  const user = await db.UserDAO.getUserByName(req.query.name);
+  res.status(200).data = { avalable: !!user };
+  console.log(res.data);
+  next();
+};
+
 const userController = {
   registerUser,
   signinUser,
   restoreUser,
+  checkUsername,
 };
 module.exports = userController;
